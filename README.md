@@ -115,19 +115,6 @@ For all models, the following regression metrics were computed:
 - **Boosting** reduced underfitting (bias) through iterative correction.  
 - **Stacking** balanced both effects using a meta-learner trained on predictions from diverse base models.
 
----
-
-## Conclusion
-
-- The **Stacking Regressor** achieved the **best generalization performance** among all models.
-- It outperformed both baseline and other ensembles by effectively balancing bias and variance.
-- The Ridge meta-learner successfully learned how to weight KNN, Bagging, and Boosting predictions optimally.
-- Ensemble diversity and bias–variance optimization are key to its superior predictive power.
-  
-> **Stacking Regressor** is the best model for this regression problem, achieving the lowest prediction error and highest explanatory power.
-
----
-
 ## Python Dependencies
 
 ```bash
@@ -143,6 +130,19 @@ scikit-learn            # core ML framework
     ├── ensemble (BaggingRegressor, GradientBoostingRegressor, StackingRegressor)
     ├── neighbors (KNeighborsRegressor)
 ```
+---
+
+## Conclusion
+
+- The **Stacking Regressor** achieved the **best generalization performance** among all models.
+- It outperformed both baseline and other ensembles by effectively balancing bias and variance.
+- The Ridge meta-learner successfully learned how to weight KNN, Bagging, and Boosting predictions optimally.
+- Ensemble diversity and bias–variance optimization are key to its superior predictive power.
+  
+> **Stacking Regressor** is the best model for this regression problem, achieving the lowest prediction error and highest explanatory power.
+
+---
+
 
 
 sumbition link: https://docs.google.com/forms/d/e/1FAIpQLSdyUZz9ugLIqIMfUipxoCCOuNmJ-Kml6O0TGxU8N7RJgHvR_A/viewform
