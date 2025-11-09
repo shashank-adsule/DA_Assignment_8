@@ -4,9 +4,7 @@
 **Name:** Shashank Satish Adsule  
 **Roll No.:** DA25M005  
 
----
-
-## 📘 Dataset Used
+## Dataset Used
 - **Dataset:** [Bike Sharing Demand Dataset (Hourly)](https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset)
 - **Source:** UCI Machine Learning Repository  
 - **Files:** `hour.csv`  
@@ -19,8 +17,6 @@ The dataset contains information about hourly bike rentals and environmental con
 - **Weather features:** temperature (`temp`), adjusted temperature (`atemp`), humidity (`hum`), windspeed (`windspeed`)  
 - **Target variable:** total rental count (`cnt`)
 
----
-
 ## Objective
 
 The objective of this assignment is to apply and compare three major **ensemble learning techniques** to solve a **complex regression problem**:
@@ -29,9 +25,7 @@ The objective of this assignment is to apply and compare three major **ensemble 
 2. **Boosting (Gradient Boosting)** – to reduce model bias  
 3. **Stacking (Meta-Ensemble)** – to optimally combine diverse base learners  
 
-You will evaluate and interpret how these ensemble techniques improve model generalization compared to baseline models (Decision Tree and Linear Regression).
-
----
+The goal is to evaluate how these ensemble techniques improve generalization compared to the **baseline Linear Regression model**.
 
 ## Models Implemented
 
@@ -39,41 +33,40 @@ A total of **five regression models** were trained and compared:
 
 | Model No. | Algorithm | Type | Purpose |
 |:--:|:--|:--|:--|
-| 1 | Decision Tree Regressor | Baseline | Non-linear baseline (high variance) |
-| 2 | Linear Regression | Baseline | Linear baseline (high bias) |
-| 3 | Bagging Regressor | Ensemble | Reduces variance via averaging |
-| 4 | Gradient Boosting Regressor | Ensemble | Reduces bias via sequential correction |
-| 5 | Stacking Regressor (KNN + Bagging + GBR, meta: Ridge) | Meta-Ensemble | Combines bias and variance reduction |
-
----
+| 1 | Decision Tree Regressor | Benchmark | Non-linear model reference |
+| 2 | **Linear Regression** | **Baseline** | Linear model with high bias and low variance |
+| 3 | **Bagging (Linear Regression base)** | Ensemble | Reduces variance slightly by averaging multiple linear models |
+| 4 | **Gradient Boosting Regressor** | Ensemble | Reduces bias via sequential residual correction |
+| 5 | **Stacking Regressor (KNN + Bagging + GBR, meta: Ridge)** | Meta-Ensemble | Combines bias and variance reduction for optimal generalization |
 
 ## Methodology
 
-### 🔹 Part A: Data Preprocessing and Baseline
+### Part A: Data Preprocessing and Baseline
 - Dropped irrelevant columns: `instant`, `dteday`, `casual`, `registered`
 - Split data into **train (70%)** and **test (30%)**
 - Trained baseline models:
-  - Decision Tree Regressor (`max_depth=6`)
-  - Linear Regression (with standardization)
-- Selected the better baseline using RMSE.
+  - **Linear Regression (with standardization)**  
+  - Decision Tree Regressor (`max_depth=6`) as a comparison model  
+- The **Linear Regression** model was chosen as the **baseline** since it offers a high-bias, low-variance reference point.
 
-### 🔹 Part B: Ensemble Techniques
-1. **Bagging Regressor** – Decision Tree as base estimator
-   - Targets **variance reduction** by averaging multiple trees.
-2. **Gradient Boosting Regressor** –
-   - Targets **bias reduction** via sequential residual learning.
+### Part B: Ensemble Techniques
 
-### 🔹 Part C: Stacking for Optimal Performance
+1. **Bagging Regressor (Linear Regression base)**  
+   - Targets **variance reduction** by training multiple Linear Regressors on bootstrapped samples.  
+   - Each model captures slightly different data characteristics, and their averaged predictions produce a more stable output.
+
+2. **Gradient Boosting Regressor**  
+   - Targets **bias reduction** by sequentially training weak learners (Linear Regressors or shallow trees) on residuals from prior models.  
+   - Each iteration corrects the systematic errors of the previous ensemble, leading to progressively improved predictions.
+
+### Part C: Stacking for Optimal Performance
 - **Base Learners (Level-0):**  
-  `KNN`, `Bagging Regressor`, `Gradient Boosting Regressor`
+  `KNN`, `Bagging (Linear Regression)`, `Gradient Boosting Regressor`
 - **Meta-Learner (Level-1):**  
   `Ridge Regression`
-- Combines model outputs to minimize overall prediction error.
-
----
+- Stacking learns how to best combine the outputs of diverse models, minimizing both bias and variance simultaneously.
 
 ## Evaluation Metrics
-
 
 For all models, the following regression metrics were computed:
 
@@ -83,37 +76,35 @@ For all models, the following regression metrics were computed:
 | **R² (Coefficient of Determination)** | Measures variance explained by the model | Higher = Better |
 | **MAPE (Mean Absolute Percentage Error)** | Measures prediction accuracy as percentage error | Lower = Better |
 
----
-
 ## Model Performance Summary
 
-| Model | RMSE ↓ | R² ↑ | MAPE (%) ↓ |
-|:--|:--|:--|:--|
-| Decision Tree Regressor | 102.4 | 0.69 | 0.75 |
-| Linear Regression | 138.2 | 0.40 | 3.65 |
-| Bagging Regressor | 97.1 | 0.71 | 0.71 |
-| Gradient Boosting Regressor | 64.8 | 0.87 | 0.95 |
-| **Stacking Regressor** | **40.3** | **0.94** | **0.39** |
+| Model | RMSE ↓ | R² ↑ | MAPE ↓ |
+|--------|--------|------|-------------|
+| **Decision Tree Regressor** | 119.84 | 0.5329 | 4.4128 |
+| **Linear Regressor (Baseline)** | 100.02 | 0.6747 | 2.9407 |
+| **Bagging (Linear Regressor)** | 100.00 | 0.6748 | 2.9397 |
+| **Gradient Boosting Regressor** | 78.39 | 0.8001 | 1.6557 |
+| **Stacking Regressor** | **65.04** | **0.8624** | **1.2133** |
 
 ![model_eval](./assests/model_eval.png)
 
-> **Best Model:** *"Stacking Regressor"* achieved the lowest RMSE and MAPE, and the highest R² score.
+> **Best Model:** *Stacking Regressor* achieved the lowest RMSE and MAPE, and the highest R² score.
 
----
 
 ## Bias–Variance Trade-off Discussion
 
 | Model | Bias | Variance | Learning Pattern |
 |:--|:--|:--|:--|
-| **Linear Regression** | High | Low | Oversimplified, underfits |
-| **Decision Tree** | Low | High | Overfits data, unstable predictions |
-| **Bagging Regressor** | Moderate | Low | Reduces variance via averaging |
-| **Gradient Boosting Regressor** | Low | Moderate | Reduces bias via sequential learning |
-| **Stacking Regressor** | Balanced | Balanced | Combines diverse models for optimal bias–variance balance |
+| **Linear Regression (Baseline)** | **High** | **Low** | Assumes linear relationships; underfits complex patterns |
+| **Decision Tree Regressor** | Low | High | Learns non-linear boundaries but overfits easily |
+| **Bagging (Linear Regressor)** | Similar Bias | **Slightly Lower Variance** | Averages predictions from multiple Linear Regressors trained on bootstrapped samples |
+| **Gradient Boosting Regressor** | **Reduced Bias** | Moderate Variance | Sequentially fits residuals to improve bias and capture non-linearities |
+| **Stacking Regressor** | Balanced | Balanced | Combines diverse learners and meta-learning for optimal bias–variance trade-off |
 
-- **Bagging** reduced overfitting (variance) of Decision Trees.  
-- **Boosting** reduced underfitting (bias) through iterative correction.  
-- **Stacking** balanced both effects using a meta-learner trained on predictions from diverse base models.
+- **Bagging** slightly reduces the variance of the Linear Regression baseline.  
+- **Boosting** significantly reduces bias by iteratively correcting residuals.  
+- **Stacking** achieves the best overall generalization by combining the strengths of all approaches through a meta-learner.
+
 
 ## Python Dependencies
 
@@ -125,12 +116,10 @@ seaborn                 # enhanced plotting
 scikit-learn            # core ML framework
     ├── model_selection (train_test_split)
     ├── metrics (mean_squared_error, r2_score)
-    ├── tree (DecisionTreeRegressor)
     ├── linear_model (LinearRegression, Ridge)
     ├── ensemble (BaggingRegressor, GradientBoostingRegressor, StackingRegressor)
     ├── neighbors (KNeighborsRegressor)
 ```
----
 
 ## Conclusion
 
@@ -141,7 +130,6 @@ scikit-learn            # core ML framework
   
 > **Stacking Regressor** is the best model for this regression problem, achieving the lowest prediction error and highest explanatory power.
 
----
 
 
 
